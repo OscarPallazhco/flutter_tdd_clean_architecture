@@ -19,7 +19,7 @@ void main() {
 
   group("fromJson", () {
     test(
-      'should be return a valid model when the JSON number is an integer',
+      'should return a valid model when the JSON number is an integer',
       () async {
         // arrange
         final Map<String, dynamic> jsonMap =
@@ -34,7 +34,7 @@ void main() {
     );
 
     test(
-      'should be return a valid model when the JSON number is regarded as a double',
+      'should return a valid model when the JSON number is regarded as a double',
       () async {
         // arrange
         final Map<String, dynamic> jsonMap =
@@ -45,6 +45,23 @@ void main() {
 
         // assert
         expect(result, tNUmberTriviaModel);
+      },
+    );
+  });
+
+  group('toJson', () {
+    test(
+      'should return a JSON map containing the proper data.',
+      () async {
+        // act
+        final result = tNUmberTriviaModel.toJson();
+
+        // assert
+        final expectedMap = {
+          "text": "text",
+          "number": 1,
+        };
+        expect(result, expectedMap);
       },
     );
   });
