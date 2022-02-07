@@ -32,5 +32,20 @@ void main() {
         expect(result, tNUmberTriviaModel);
       },
     );
+
+    test(
+      'should be return a valid model when the JSON number is regarded as a double',
+      () async {
+        // arrange
+        final Map<String, dynamic> jsonMap =
+            json.decode(fixture('trivia_double.json'));
+
+        // act
+        final result = NumberTriviaModel.fromJson(jsonMap);
+
+        // assert
+        expect(result, tNUmberTriviaModel);
+      },
+    );
   });
 }
