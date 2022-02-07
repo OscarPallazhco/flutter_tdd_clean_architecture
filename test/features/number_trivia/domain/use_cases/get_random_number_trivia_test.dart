@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
+import 'package:mockito/mockito.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:flutter_tdd_clean_architecturre/core/use_cases/usecase.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/use_cases/get_random_number_trivia.dart';
-import 'package:mockito/mockito.dart';
-
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/repositories/number_trivia_repository.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 class MockNumberTriviaRepository extends Mock
     implements NumberTriviaRepository {}
