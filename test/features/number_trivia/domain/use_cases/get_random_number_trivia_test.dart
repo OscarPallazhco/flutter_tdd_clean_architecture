@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/entities/number_trivia.dart';
+import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/use_cases/get_random_number_trivia.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/repositories/number_trivia_repository.dart';
-import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/use_cases/get_concrete_number_trivia.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class MockNumberTriviaRepository extends Mock
@@ -27,7 +27,7 @@ void main() {
           .thenAnswer((_) async => Right(tNumberTrivia));
 
       //  act
-      final result = await usecase();
+      final result = await usecase(NoParams());
 
       // assert
       expect(result, Right(tNumberTrivia));
