@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:equatable/equatable.dart';
 
 import '../../../../core/failures.dart';
 import '../../../../core/use_cases/usecase.dart';
