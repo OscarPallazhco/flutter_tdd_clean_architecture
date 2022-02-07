@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import '../../fixtures/fixture_reader.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/data/models/number_trivia_model.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/entities/number_trivia.dart';
+
+import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
   final tNUmberTriviaModel = NumberTriviaModel(text: 'text', number: 1);
