@@ -10,20 +10,17 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'number_trivia_repository_impl_test.mocks.dart';
 
-class MockLocalDataSource extends Mock implements NumberTriviaLocalDataSource {}
 
-class MockNetworkInfo extends Mock implements NetworkInfo {}
-
-@GenerateMocks([NumberTriviaRemoteDataSource])
+@GenerateMocks([NumberTriviaRemoteDataSource, NetworkInfo, NumberTriviaLocalDataSource])
 void main() {
   late NumberTriviaRepositoryImpl repository;
   late MockNumberTriviaRemoteDataSource mockRemoteDataSource;
-  late MockLocalDataSource mockLocalDataSource;
+  late MockNumberTriviaLocalDataSource mockLocalDataSource;
   late MockNetworkInfo mockNetworkInfo;
 
   setUp(() {
     mockRemoteDataSource = MockNumberTriviaRemoteDataSource();
-    mockLocalDataSource = MockLocalDataSource();
+    mockLocalDataSource = MockNumberTriviaLocalDataSource();
     mockNetworkInfo = MockNetworkInfo();
     repository = NumberTriviaRepositoryImpl(
       remoteDataSource: mockRemoteDataSource,
@@ -34,8 +31,7 @@ void main() {
 
   group('getConcreteNumberTrivia', () {
     final tNumber = 1;
-    final tNumberTriviaModel =
-        NumberTriviaModel(text: "test trivia", number: tNumber);
+    final tNumberTriviaModel = NumberTriviaModel(text: "test trivia", number: tNumber);
     final NumberTrivia tNumberTrivia = tNumberTriviaModel;
     test(
       'should be check if the device is online',
@@ -59,9 +55,9 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.getConcreteNumberTrivia(any))
-              .thenAnswer((_) async => tNumberTriviaModel);
+            .thenAnswer((_) async => tNumberTriviaModel);
           // act
-          final result = repository.getConcreteNumberTrivia(tNumber);
+          final result = await repository.getConcreteNumberTrivia(tNumber);
           // assert
           verify(mockRemoteDataSource.getConcreteNumberTrivia(tNumber));
           expect(result, equals(Right(tNumberTrivia)));
