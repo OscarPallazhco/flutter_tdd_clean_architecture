@@ -4,7 +4,7 @@
 
 import 'dart:async' as _i4;
 
-import 'package:flutter_tdd_clean_architecturre/core/platform/network_info.dart'
+import 'package:flutter_tdd_clean_architecturre/core/network/network_info.dart'
     as _i5;
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/data/datasources/number_trivia_local_data_source.dart'
     as _i6;
