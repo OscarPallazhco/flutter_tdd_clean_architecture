@@ -46,7 +46,7 @@ void main() {
         await repository.getConcreteNumberTrivia(tNumber);
         // assert
         verify(mockNetworkInfo.isConnected);
-        // verify(mockRemoteDataSource.getConcreteNumberTrivia(tNumber));
+        verify(mockRemoteDataSource.getConcreteNumberTrivia(tNumber));
       },
     );
 
