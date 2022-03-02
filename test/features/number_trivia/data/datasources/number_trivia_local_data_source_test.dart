@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_tdd_clean_architecturre/core/error/exceptions.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mockito/annotations.dart';
@@ -12,33 +13,47 @@ import 'package:flutter_tdd_clean_architecturre/features/number_trivia/data/mode
 
 @GenerateMocks([SharedPreferences])
 void main() {
-
   late MockSharedPreferences mockSharedPreferences;
   late NumberTriviaLocalDataSourceImpl dataSource;
 
-  setUp((){
+  setUp(() {
     mockSharedPreferences = MockSharedPreferences();
-    dataSource = NumberTriviaLocalDataSourceImpl(sharedPreferences: mockSharedPreferences);
+    dataSource = NumberTriviaLocalDataSourceImpl(
+        sharedPreferences: mockSharedPreferences);
   });
 
-  group('getLastNumberTrivia', (){
-    NumberTriviaModel tNumberTriviaModel = NumberTriviaModel.fromJson(json.decode(fixture('trivia_cached.json')));
+  group('getLastNumberTrivia', () {
+    NumberTriviaModel tNumberTriviaModel =
+        NumberTriviaModel.fromJson(json.decode(fixture('trivia_cached.json')));
     test(
       'Should return NumberTrivia from SharedPreferences when there is one in the cache',
       () async {
         // arrange
-        when(mockSharedPreferences.getString(any)).thenReturn(fixture('trivia_cached.json'));
-    
+        when(mockSharedPreferences.getString(any))
+            .thenReturn(fixture('trivia_cached.json'));
+
         // act
-         final result = await dataSource.getLastNumberTrivia();
-    
+        final result = await dataSource.getLastNumberTrivia();
+
         // assert
         verify(mockSharedPreferences.getString(CACHED_NUMBER_TRIVIA));
         expect(result, equals(tNumberTriviaModel));
       },
     );
 
+    test(
+      'Should throw an CacheException when there is not a cached value',
+      () async {
+        // arrange
+        when(mockSharedPreferences.getString(any))
+            .thenReturn(null as String);
 
+        // act
+        final call = dataSource.getLastNumberTrivia;
+
+        // assert
+        expect(()=>call(), throwsA(TypeMatcher<CacheException>()));
+      },
+    );
   });
-
 }
