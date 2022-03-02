@@ -11,7 +11,11 @@ import 'number_trivia_local_data_source_test.mocks.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/data/datasources/number_trivia_local_data_source.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/data/models/number_trivia_model.dart';
 
-@GenerateMocks([SharedPreferences])
+// https://pub.dev/documentation/mockito/latest/annotations/MockSpec-class.html/
+
+@GenerateMocks([], customMocks: [
+  MockSpec<SharedPreferences>(returnNullOnMissingStub: true)
+])
 void main() {
   late MockSharedPreferences mockSharedPreferences;
   late NumberTriviaLocalDataSourceImpl dataSource;
@@ -46,7 +50,7 @@ void main() {
       () async {
         // arrange
         when(mockSharedPreferences.getString(any))
-            .thenReturn(null as String);
+            .thenReturn(null);
 
         // act
         final call = dataSource.getLastNumberTrivia;
