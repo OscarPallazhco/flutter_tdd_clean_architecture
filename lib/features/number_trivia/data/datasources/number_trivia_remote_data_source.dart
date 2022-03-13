@@ -14,17 +14,17 @@ abstract class NumberTriviaRemoteDataSource {
   Future<NumberTriviaModel> getRandomNumberTrivia();
 }
 
-
 class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
-
   final http.Client client;
 
   NumberTriviaRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<NumberTriviaModel> getConcreteNumberTrivia(int number) {
-    // TODO: implement getConcreteNumberTrivia
-    throw UnimplementedError();
+  Future<NumberTriviaModel> getConcreteNumberTrivia(int number) async {
+    await client.get(Uri(path: 'http://numbersapi.com/$number'), headers: {
+      'Content-Type': 'application/json',
+    });
+    return NumberTriviaModel(text: 'resp.body', number: 1);
   }
 
   @override
@@ -32,5 +32,4 @@ class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
     // TODO: implement getRandomNumberTrivia
     throw UnimplementedError();
   }
-  
 }

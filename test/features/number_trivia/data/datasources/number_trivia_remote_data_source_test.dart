@@ -17,7 +17,9 @@ import 'number_trivia_remote_data_source_test.mocks.dart';
 
 // https://pub.dev/documentation/mockito/latest/annotations/MockSpec-class.html/
 
-@GenerateMocks([http.Client])
+@GenerateMocks([], customMocks: [
+  MockSpec<http.Client>(returnNullOnMissingStub: true)
+])
 void main() {
   late NumberTriviaRemoteDataSourceImpl dataSource;
   late MockClient mockHttpClient;
@@ -44,7 +46,7 @@ void main() {
         verify(mockHttpClient.get(
           Uri(path: 'http://numbersapi.com/$tNumber'),
           headers: {
-            'Content-type': 'application/json',
+            'Content-Type': 'application/json',
           }
         ));
       },
