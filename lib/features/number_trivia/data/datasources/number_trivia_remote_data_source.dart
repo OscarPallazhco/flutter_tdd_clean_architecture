@@ -28,8 +28,7 @@ class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
       'Content-Type': 'application/json',
     });
 
-    final triviaModelJson = json.decode(response.body);
-    return NumberTriviaModel.fromJson(triviaModelJson);
+    return NumberTriviaModel.fromJson(json.decode(response.body));
   }
 
   @override
