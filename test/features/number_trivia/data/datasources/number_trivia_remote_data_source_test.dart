@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter_tdd_clean_architecturre/core/error/exceptions.dart';
-import 'package:flutter_tdd_clean_architecturre/core/error/failures.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:flutter_test/flutter_test.dart';
