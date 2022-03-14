@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_tdd_clean_architecturre/core/error/exceptions.dart';
+import 'package:flutter_tdd_clean_architecturre/core/error/failures.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,8 +40,10 @@ void main() {
         when(mockHttpClient.get(any, headers: anyNamed('headers'))).thenAnswer(
             (realInvocation) async =>
                 http.Response(fixture('trivia.json'), 200));
+
         // act
         dataSource.getConcreteNumberTrivia(tNumber);
+
         // assert
         verify(mockHttpClient
             .get(Uri(path: 'http://numbersapi.com/$tNumber'), headers: {
@@ -59,8 +63,24 @@ void main() {
         // act
         final NumberTriviaModel result =
             await dataSource.getConcreteNumberTrivia(tNumber);
+
         // assert
         expect(result, equals(tNumberTriviaModel));
+      },
+    );
+
+    test(
+      'should throw a ServerException when the status code is different of 200',
+      () async {
+        // arrange
+        when(mockHttpClient.get(any, headers: anyNamed('headers')))
+            .thenAnswer((realInvocation) async => http.Response('error', 400));
+
+        // act
+        final call = dataSource.getConcreteNumberTrivia;
+
+        // assert
+        expect(() => call(tNumber), throwsA(TypeMatcher<ServerException>()));
       },
     );
   });
