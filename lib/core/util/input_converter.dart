@@ -4,7 +4,9 @@ import 'package:flutter_tdd_clean_architecturre/core/error/failures.dart';
 class InputConverter {
   Either<Failure, int> stringToUnsignedInteger(String str) {
     try {
-      return Right(int.parse(str));
+      final int inputNumber = int.parse(str);
+      if (inputNumber < 0) throw FormatException();
+        return Right(inputNumber);
     } on FormatException{
       return Left(InvalidInputFailure());
     }
