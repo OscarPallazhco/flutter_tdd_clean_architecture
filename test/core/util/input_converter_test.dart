@@ -11,7 +11,7 @@ void main() {
 
   group('stringToUnsignedInt', () {
     test(
-      'should retun an integer when the string represents an unsigned integer.',
+      'should return an integer when the string represents an unsigned integer.',
       () async {
         // arrange
         final str = '123';
@@ -25,7 +25,7 @@ void main() {
     );
 
     test(
-      'should retun an Failure when the string is not a integer.',
+      'should return an Failure when the string is not a integer.',
       () async {
         // arrange
         final str = 'sdsd';
