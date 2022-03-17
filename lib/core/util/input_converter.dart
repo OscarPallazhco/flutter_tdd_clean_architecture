@@ -2,11 +2,13 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_tdd_clean_architecturre/core/error/failures.dart';
 
 class InputConverter {
-  Either<Failure, int> stringToUnsignedInteger(String str){
-    return Right(int.parse(str));
+  Either<Failure, int> stringToUnsignedInteger(String str) {
+    try {
+      return Right(int.parse(str));
+    } on FormatException{
+      return Left(InvalidInputFailure());
+    }
   }
 }
 
-class InvalidInputFailure {
-  
-}
+class InvalidInputFailure extends Failure {}
