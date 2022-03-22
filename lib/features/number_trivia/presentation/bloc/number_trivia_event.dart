@@ -1,7 +1,7 @@
 part of 'number_trivia_bloc.dart';
 
 abstract class NumberTriviaEvent extends Equatable {
-  NumberTriviaEvent([List props = const <dynamic>[]]):super();
+  NumberTriviaEvent([List props = const <dynamic>[]]);
 
   @override
   List<Object> get props => [];
@@ -10,7 +10,11 @@ abstract class NumberTriviaEvent extends Equatable {
 class GetTriviaForConcreteNumber extends NumberTriviaEvent {
   final String numberString;
   GetTriviaForConcreteNumber(this.numberString):super();
+
+  @override
+  List<Object> get props => [numberString];
 }
+
 
 class GetTriviaForRandomNumber extends NumberTriviaEvent {
 }
