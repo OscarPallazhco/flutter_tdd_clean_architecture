@@ -16,8 +16,8 @@ class Loaded extends NumberTriviaState {
 
   Loaded({required this.numberTrivia}) : super();
 
-  // @override
-  // List<Object> get props => [numberTrivia];
+  @override
+  List<Object> get props => [numberTrivia];
 }
 
 class Error extends NumberTriviaState {
@@ -25,6 +25,6 @@ class Error extends NumberTriviaState {
 
   Error({required this.message}) : super();
 
-  // @override
-  // List<Object> get props => [message];
+  @override
+  List<Object> get props => [message];
 }
