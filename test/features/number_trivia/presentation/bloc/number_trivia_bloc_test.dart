@@ -4,27 +4,24 @@ import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/en
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/use_cases/get_concrete_number_trivia.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/use_cases/get_random_number_trivia.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/presentation/bloc/number_trivia_bloc.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:bloc_test/bloc_test.dart';
+import 'number_trivia_bloc_test.mocks.dart';
 
-class MockGetConcreteNumberTrivia extends Mock
-    implements GetConcreteNumberTrivia {}
-
-class MockGetRandomNumberTrivia extends Mock implements GetRandomNumberTrivia {}
-
-class MockInputConverter extends Mock implements InputConverter {}
-
+@GenerateMocks([GetConcreteNumberTrivia, GetRandomNumberTrivia, InputConverter])
 void main() {
-  late NumberTriviaBloc bloc;
-  MockGetConcreteNumberTrivia mockGetConcreteNumberTrivia;
-  MockGetRandomNumberTrivia mockGetRandomNumberTrivia;
+  late NumberTriviaBloc numberTriviaBloc;
+  late MockGetConcreteNumberTrivia mockGetConcreteNumberTrivia;
+  late MockGetRandomNumberTrivia mockGetRandomNumberTrivia;
   late MockInputConverter mockInputConverter;
 
   setUp(() {
     mockGetConcreteNumberTrivia = MockGetConcreteNumberTrivia();
     mockGetRandomNumberTrivia = MockGetRandomNumberTrivia();
     mockInputConverter = MockInputConverter();
-    bloc = NumberTriviaBloc(
+    numberTriviaBloc = NumberTriviaBloc(
         getConcreteNumberTrivia: mockGetConcreteNumberTrivia,
         getRandomNumberTrivia: mockGetRandomNumberTrivia,
         inputConverter: mockInputConverter);
@@ -34,7 +31,7 @@ void main() {
     'initialState should be Empty',
     () async {
       // assert
-      expect(bloc.state, equals(Empty()));
+      expect(numberTriviaBloc.state, equals(Empty()));
     },
   );
 
@@ -50,7 +47,7 @@ void main() {
         when(mockInputConverter.stringToUnsignedInteger(any as String)).thenReturn(Right(tNumberParsed));
     
         // act
-        bloc.add((GetTriviaForConcreteNumber(tNumberString)));
+        numberTriviaBloc.add((GetTriviaForConcreteNumber(tNumberString)));
         await untilCalled(mockInputConverter.stringToUnsignedInteger(any as String));
     
         // assert
@@ -58,5 +55,37 @@ void main() {
       },
     );
 
+    blocTest<NumberTriviaBloc, NumberTriviaState>(
+      'emit [NumberTriviaError] when the input is invalid',
+      build: () {
+        when(mockInputConverter.stringToUnsignedInteger(any as String))
+            .thenReturn(Left(InvalidInputFailure()));
+        return numberTriviaBloc;
+      },
+      act: (bloc) => bloc.add(GetTriviaForConcreteNumber(tNumberString)),
+      expect: () => [Error(message: INVALID_INPUT_FAILURE_MESSAGE)],
+    );
+
+    // test(
+    //   'should emit [error] when the input is invalid',
+    //   () async {
+    //     // arrange
+    //     when(mockInputConverter.stringToUnsignedInteger(any)).thenReturn(Left(InvalidInputFailure()));
+    
+    //     // assert later
+    //     final expected = [
+    //       Empty(),
+    //       Error(message: INVALID_INPUT_FAILURE_MESSAGE)
+    //     ];
+
+    //     // expectLater(numberTriviaBloc.state, emitsInOrder(expected));
+    //     await expectLater(emits([numberTriviaBloc.state]), emitsInOrder(expected));
+
+    //     // act
+    //     numberTriviaBloc.add(GetTriviaForConcreteNumber(tNumberString));
+    //   },
+    // );
+
+    
   });
 }

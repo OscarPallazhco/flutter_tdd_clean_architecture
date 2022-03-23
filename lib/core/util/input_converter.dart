@@ -6,7 +6,7 @@ class InputConverter {
     try {
       final int inputNumber = int.parse(str);
       if (inputNumber < 0) throw FormatException();
-        return Right(inputNumber);
+      return Right(inputNumber);
     } on FormatException{
       return Left(InvalidInputFailure());
     }
