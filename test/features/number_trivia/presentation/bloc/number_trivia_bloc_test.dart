@@ -55,37 +55,21 @@ void main() {
       },
     );
 
-    blocTest<NumberTriviaBloc, NumberTriviaState>(
-      'emit [NumberTriviaError] when the input is invalid',
-      build: () {
-        when(mockInputConverter.stringToUnsignedInteger(any as String))
-            .thenReturn(Left(InvalidInputFailure()));
-        return numberTriviaBloc;
+    test(
+      'should emit [error] when the input is invalid',
+      () async {
+        // arrange
+        when(mockInputConverter.stringToUnsignedInteger(any)).thenReturn(Left(InvalidInputFailure()));
+
+        // assert later
+        final expected = [
+          Error(message: INVALID_INPUT_FAILURE_MESSAGE)
+        ];
+        expectLater(numberTriviaBloc.stream, emitsInOrder(expected));
+
+        // act
+        numberTriviaBloc.add(GetTriviaForConcreteNumber(tNumberString));
       },
-      act: (bloc) => bloc.add(GetTriviaForConcreteNumber(tNumberString)),
-      expect: () => [Error(message: INVALID_INPUT_FAILURE_MESSAGE)],
     );
-
-    // test(
-    //   'should emit [error] when the input is invalid',
-    //   () async {
-    //     // arrange
-    //     when(mockInputConverter.stringToUnsignedInteger(any)).thenReturn(Left(InvalidInputFailure()));
-    
-    //     // assert later
-    //     final expected = [
-    //       Empty(),
-    //       Error(message: INVALID_INPUT_FAILURE_MESSAGE)
-    //     ];
-
-    //     // expectLater(numberTriviaBloc.state, emitsInOrder(expected));
-    //     await expectLater(emits([numberTriviaBloc.state]), emitsInOrder(expected));
-
-    //     // act
-    //     numberTriviaBloc.add(GetTriviaForConcreteNumber(tNumberString));
-    //   },
-    // );
-
-    
   });
 }
