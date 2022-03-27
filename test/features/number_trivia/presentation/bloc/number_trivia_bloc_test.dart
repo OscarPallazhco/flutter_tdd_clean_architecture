@@ -56,9 +56,13 @@ void main() {
       when(mockGetConcreteNumberTrivia(any))
         .thenAnswer((_) async => Right(tNumberTrivia));
 
-    void setUpMockGetConcreteNumberTriviaUnSuccess() => 
+    void setUpMockGetConcreteNumberTriviaUnSuccessWithServerFailure() => 
       when(mockGetConcreteNumberTrivia(any))
         .thenAnswer((_) async => Left(ServerFailure()));
+
+    void setUpMockGetConcreteNumberTriviaUnSuccessWithCacheFailure() => 
+      when(mockGetConcreteNumberTrivia(any))
+        .thenAnswer((_) async => Left(CacheFailure()));
 
     test(
       'Should call the InputConvert to validate and convert the string to an unsigned integer',
@@ -130,12 +134,31 @@ void main() {
       () async {
         // arrange
         setUpMockInputConverterSuccess();
-        setUpMockGetConcreteNumberTriviaUnSuccess();
+        setUpMockGetConcreteNumberTriviaUnSuccessWithServerFailure();
 
         // assert later
         final expected = [
           Loading(),
           Error(message: SERVER_FAILURE_MESSAGE)
+        ];
+        expectLater(numberTriviaBloc.stream, emitsInOrder(expected));
+
+        // act
+        numberTriviaBloc.add(GetTriviaForConcreteNumber(tNumberString));
+      },
+    );
+    
+    test(
+      'should emit [Loading, Error] with a proper message for the error when getting data fails',
+      () async {
+        // arrange
+        setUpMockInputConverterSuccess();
+        setUpMockGetConcreteNumberTriviaUnSuccessWithCacheFailure();
+
+        // assert later
+        final expected = [
+          Loading(),
+          Error(message: CACHE_FAILURE_MESSAGE)
         ];
         expectLater(numberTriviaBloc.stream, emitsInOrder(expected));
 
