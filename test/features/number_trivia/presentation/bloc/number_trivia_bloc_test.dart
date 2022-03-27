@@ -43,11 +43,23 @@ void main() {
     final tNumberParsed = 1;
     final tNumberTrivia = NumberTrivia(text: "test trivia", number: tNumberParsed);
 
+    void setUpMockInputConverterSuccess() => 
+      when(mockInputConverter.stringToUnsignedInteger(any))
+        .thenReturn(Right(tNumberParsed));
+
+    void setUpMockInputConverterUnSuccess() => 
+      when(mockInputConverter.stringToUnsignedInteger(any))
+        .thenReturn(Left(InvalidInputFailure()));
+    
+    void setUpMockGetConcreteNumberTriviaSuccess() => 
+      when(mockGetConcreteNumberTrivia(any))
+        .thenAnswer((_) async => Right(tNumberTrivia));
+
     test(
       'Should call the InputConvert to validate and convert the string to an unsigned integer',
       () async {
         // arrange
-        when(mockInputConverter.stringToUnsignedInteger(any)).thenReturn(Right(tNumberParsed));
+        setUpMockInputConverterSuccess();
 
         // act
         numberTriviaBloc.add((GetTriviaForConcreteNumber(tNumberString)));
@@ -62,7 +74,7 @@ void main() {
       'should emit [error] when the input is invalid',
       () async {
         // arrange
-        when(mockInputConverter.stringToUnsignedInteger(any)).thenReturn(Left(InvalidInputFailure()));
+        setUpMockInputConverterUnSuccess();
 
         // assert later
         final expected = [Error(message: INVALID_INPUT_FAILURE_MESSAGE)];
@@ -77,10 +89,8 @@ void main() {
       'should get data from the concrete use case',
       () async {
         // arrange
-        when(mockInputConverter.stringToUnsignedInteger(any))
-            .thenReturn(Right(tNumberParsed));
-        when(mockGetConcreteNumberTrivia(any))
-            .thenAnswer((_) async => Right(tNumberTrivia));
+        setUpMockInputConverterSuccess();
+        setUpMockGetConcreteNumberTriviaSuccess();
 
         // act
         numberTriviaBloc.add(GetTriviaForConcreteNumber(tNumberString));
