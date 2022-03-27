@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_tdd_clean_architecturre/core/error/failures.dart';
 import 'package:flutter_tdd_clean_architecturre/core/util/input_converter.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:flutter_tdd_clean_architecturre/features/number_trivia/domain/use_cases/get_concrete_number_trivia.dart';
@@ -54,6 +55,10 @@ void main() {
     void setUpMockGetConcreteNumberTriviaSuccess() => 
       when(mockGetConcreteNumberTrivia(any))
         .thenAnswer((_) async => Right(tNumberTrivia));
+
+    void setUpMockGetConcreteNumberTriviaUnSuccess() => 
+      when(mockGetConcreteNumberTrivia(any))
+        .thenAnswer((_) async => Left(ServerFailure()));
 
     test(
       'Should call the InputConvert to validate and convert the string to an unsigned integer',
@@ -112,6 +117,25 @@ void main() {
         final expected = [
           Loading(),
           Loaded(numberTrivia: tNumberTrivia)
+        ];
+        expectLater(numberTriviaBloc.stream, emitsInOrder(expected));
+
+        // act
+        numberTriviaBloc.add(GetTriviaForConcreteNumber(tNumberString));
+      },
+    );
+
+    test(
+      'should emit [Loading, Error] when data is gotten unsuccessfully',
+      () async {
+        // arrange
+        setUpMockInputConverterSuccess();
+        setUpMockGetConcreteNumberTriviaUnSuccess();
+
+        // assert later
+        final expected = [
+          Loading(),
+          Error(message: SERVER_FAILURE_MESSAGE)
         ];
         expectLater(numberTriviaBloc.stream, emitsInOrder(expected));
 
