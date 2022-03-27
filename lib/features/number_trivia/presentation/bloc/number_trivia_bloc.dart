@@ -37,5 +37,4 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
       (integer) => getConcreteNumberTrivia(Params(number: integer))
     );
   }
-
 }

@@ -7,10 +7,13 @@ import 'package:flutter_tdd_clean_architecturre/features/number_trivia/presentat
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:bloc_test/bloc_test.dart';
 import 'number_trivia_bloc_test.mocks.dart';
 
-@GenerateMocks([GetConcreteNumberTrivia, GetRandomNumberTrivia, InputConverter])
+@GenerateMocks([], customMocks: [
+  MockSpec<GetConcreteNumberTrivia>(returnNullOnMissingStub: true),
+  MockSpec<GetRandomNumberTrivia>(returnNullOnMissingStub: true),
+  MockSpec<InputConverter>(returnNullOnMissingStub: true),
+])
 void main() {
   late NumberTriviaBloc numberTriviaBloc;
   late MockGetConcreteNumberTrivia mockGetConcreteNumberTrivia;
@@ -44,12 +47,12 @@ void main() {
       'Should call the InputConvert to validate and convert the string to an unsigned integer',
       () async {
         // arrange
-        when(mockInputConverter.stringToUnsignedInteger(any as String)).thenReturn(Right(tNumberParsed));
-    
+        when(mockInputConverter.stringToUnsignedInteger(any)).thenReturn(Right(tNumberParsed));
+
         // act
         numberTriviaBloc.add((GetTriviaForConcreteNumber(tNumberString)));
-        await untilCalled(mockInputConverter.stringToUnsignedInteger(any as String));
-    
+        await untilCalled(mockInputConverter.stringToUnsignedInteger(any));
+
         // assert
         verify(mockInputConverter.stringToUnsignedInteger(tNumberString));
       },
@@ -62,9 +65,7 @@ void main() {
         when(mockInputConverter.stringToUnsignedInteger(any)).thenReturn(Left(InvalidInputFailure()));
 
         // assert later
-        final expected = [
-          Error(message: INVALID_INPUT_FAILURE_MESSAGE)
-        ];
+        final expected = [Error(message: INVALID_INPUT_FAILURE_MESSAGE)];
         expectLater(numberTriviaBloc.stream, emitsInOrder(expected));
 
         // act
