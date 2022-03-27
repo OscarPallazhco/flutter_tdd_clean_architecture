@@ -14,6 +14,7 @@ part 'number_trivia_state.dart';
 const String SERVER_FAILURE_MESSAGE = "Server Failure";
 const String CACHE_FAILURE_MESSAGE = "Cache Failure";
 const String INVALID_INPUT_FAILURE_MESSAGE = "Invalid input - The number must be a positive integer or zero";
+const String UNEXPECTED_FAILURE_MESSAGE = "Unexpected error";
 
 class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   final GetConcreteNumberTrivia getConcreteNumberTrivia;
@@ -39,13 +40,21 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         emit(Loading());
         final failureOrTrivia = await getConcreteNumberTrivia(Params(number: integer));
         failureOrTrivia.fold(
-          (failure){
-            final errorMessage = (failure is ServerFailure) ? SERVER_FAILURE_MESSAGE : CACHE_FAILURE_MESSAGE;
-            emit(Error(message: errorMessage));
-          },
+          (failure) => emit(Error(message: _mapFailureToMessage(failure))),
           (trivia) => emit(Loaded(numberTrivia: trivia))
         );
       }
     );
+  }
+
+  String _mapFailureToMessage(Failure failure){
+    switch(failure.runtimeType){
+      case ServerFailure:
+        return SERVER_FAILURE_MESSAGE;
+      case CacheFailure:
+        return CACHE_FAILURE_MESSAGE;
+      default:
+        return UNEXPECTED_FAILURE_MESSAGE;
+    }
   }
 }
