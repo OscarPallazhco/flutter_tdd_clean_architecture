@@ -53,7 +53,7 @@ void main() {
 
         // assert
         verify(mockHttpClient
-            .get(Uri(path: 'http://numbersapi.com/$tNumber'), headers: {
+            .get(Uri.parse('http://numbersapi.com/$tNumber'), headers: {
           'Content-Type': 'application/json',
         }));
       },
@@ -106,7 +106,7 @@ group('getRandomNumberTrivia', () {
 
         // assert
         verify(mockHttpClient
-            .get(Uri(path: 'http://numbersapi.com/random'), headers: {
+            .get(Uri.parse('http://numbersapi.com/random'), headers: {
           'Content-Type': 'application/json',
         }));
       },

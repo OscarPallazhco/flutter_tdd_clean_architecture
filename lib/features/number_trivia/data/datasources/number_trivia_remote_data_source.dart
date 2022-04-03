@@ -31,7 +31,7 @@ class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
       _getTriviaFromUrl('http://numbersapi.com/random');
 
   Future<NumberTriviaModel> _getTriviaFromUrl(String url) async {
-    final response = await client.get(Uri(path: url), headers: {
+    final response = await client.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
     });
 
