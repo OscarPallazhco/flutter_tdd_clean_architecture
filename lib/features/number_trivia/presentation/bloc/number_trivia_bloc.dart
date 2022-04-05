@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_tdd_clean_architecturre/core/error/failures.dart';
-import 'package:flutter_tdd_clean_architecturre/core/use_cases/usecase.dart';
 
+import '../../../../core/error/failures.dart';
+import '../../../../core/use_cases/usecase.dart';
 import '../../../../core/util/input_converter.dart';
 import '../../domain/entities/number_trivia.dart';
 import '../../domain/use_cases/get_concrete_number_trivia.dart';
@@ -36,9 +36,9 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
     Emitter<NumberTriviaState> emit
   ) async {
     final inputEither = inputConverter.stringToUnsignedInteger(event.numberString);
-    inputEither.fold(
-      (failure) => emit(Error(message: INVALID_INPUT_FAILURE_MESSAGE)),
-      (integer) async{
+    await inputEither.fold(
+      (failure) async => emit(Error(message: INVALID_INPUT_FAILURE_MESSAGE)),
+      (integer) async {
         emit(Loading());
         final failureOrTrivia = await getConcreteNumberTrivia(Params(number: integer));
         if (failureOrTrivia != null) {  //TODO != null is unneccessary, but without this, one test will fail
