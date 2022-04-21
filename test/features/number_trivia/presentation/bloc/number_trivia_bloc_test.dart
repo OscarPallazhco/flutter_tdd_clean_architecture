@@ -70,6 +70,7 @@ void main() {
       () async {
         // arrange
         setUpMockInputConverterSuccess();
+        setUpMockGetConcreteNumberTriviaSuccess();
 
         // act
         numberTriviaBloc.add((GetTriviaForConcreteNumber(tNumberString)));
